@@ -31,3 +31,18 @@ body {
     text-wrap: balance;
   }
 }
+
+.extend-test {
+  animation: grow 1s linear;
+}
+
+@keyframes grow {
+  from {
+    /* grid-template-rows: 0fr; */
+    height: 0;
+  }
+  to {
+    /* grid-template-rows: 1fr; */
+    height: 50px;
+  }
+}
