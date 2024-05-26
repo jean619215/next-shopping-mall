@@ -1,12 +1,35 @@
-import React from "react";
+// mark as client component
+"use client";
 
-const TestComponent: React.FC = () => {
+// importing necessary functions
+import { useSession, signIn, signOut } from "next-auth/react";
+import Image from "next/image";
+
+export default function Home() {
+  // extracting data from usesession as session
+  const { data: session } = useSession();
+
+  // checking if sessions exists
+  if (session) {
+    // rendering components for logged in users
+    //將 session 轉成字串 顯示在畫面上
+    const stSession = JSON.stringify(session);
+    return (
+      <>
+        <p>Welcome {session.user?.name}. Signed In As</p>
+        <p>{session.user?.email}</p>
+        <button onClick={() => signOut()}>Sign out</button>
+        <div className="">{stSession}</div>
+      </>
+    );
+  }
+
+  // rendering components for not logged in users
   return (
-    <div>
-      <h1>Hello, World!</h1>
-      <p>This is a test component.</p>
-    </div>
+    <>
+      <p>Not Signed In</p>
+      <button onClick={() => signIn("google")}>Sign in with google</button>
+      <button onClick={() => signIn("github")}>Sign in with github</button>
+    </>
   );
-};
-
-export default TestComponent;
+}
