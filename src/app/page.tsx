@@ -1,35 +1,32 @@
-// mark as client component
 "use client";
 
-// importing necessary functions
-import { useSession, signIn, signOut } from "next-auth/react";
-import Image from "next/image";
+import { getServerSession } from "next-auth/next";
 
-export default function Home() {
-  // extracting data from usesession as session
-  const { data: session } = useSession();
+import { useSession } from "next-auth/react";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
-  // checking if sessions exists
+export default function Page() {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
+
   if (session) {
-    // rendering components for logged in users
-    //將 session 轉成字串 顯示在畫面上
-    const stSession = JSON.stringify(session);
     return (
       <>
-        <p>Welcome {session.user?.name}. Signed In As</p>
-        <p>{session.user?.email}</p>
-        <button onClick={() => signOut()}>Sign out</button>
-        <div className="">{stSession}</div>
+        <h1>Protected Page</h1>
+        <p>You can view this page because you are signed in.</p>
       </>
     );
   }
-
-  // rendering components for not logged in users
-  return (
-    <>
-      <p>Not Signed In</p>
-      <button onClick={() => signIn("google")}>Sign in with google</button>
-      <button onClick={() => signIn("github")}>Sign in with github</button>
-    </>
-  );
+  return <p>Access Denied</p>;
 }
+
+// export async function getServerSideProps(context: any) {
+//   return {
+//     props: {
+//       session: await getServerSession(context.req, context.res, authOptions),
+//     },
+//   };
+// }
